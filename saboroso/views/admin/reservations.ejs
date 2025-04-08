@@ -74,13 +74,14 @@
             </tr>
           </thead>
           <tbody>
+            <% data.forEach(row => { %>
             <tr>
-              <td>1.</td>
-              <td>Hcode</td>
-              <td>contato@hcode.com.br</td>
-              <td>2</td>
-              <td>1/1/2019</td>
-              <td>10:30</td>
+              <td><%= row.id %></td>
+              <td><%= row.name %></td>
+              <td><%= row.email %></td>
+              <td><%= row.people %></td>
+              <td><%= row.date %></td>
+              <td><%= row.time %></td>
               <td>
                 <button
                   type="button"
@@ -97,6 +98,7 @@
                 </button>
               </td>
             </tr>
+            <% }); %>
           </tbody>
         </table>
       </div>
