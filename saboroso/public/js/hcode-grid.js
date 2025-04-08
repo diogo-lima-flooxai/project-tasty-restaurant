@@ -1,10 +1,17 @@
 class HcodeGrid {
   constructor(configs) {
+
+    configs.listeners = Object.assign({},{
+      afterUpdateClick:(e)=>{
+        $("#modal-update").modal("show");
+      }
+    }, configs.listeners);
+
     this.options = Object.assign({}, {
       formCreate: '#modal-create form',
       formUpdate: '#modal-update form',
       btnUpdate: '.btn-update',
-      btnDelete: '.btn-delete',
+      btnDelete: '.btn-delete'
     }, configs) ;
 
     this.initForms();
@@ -35,11 +42,17 @@ class HcodeGrid {
       });
   }
 
+  fireEvent(name, args){
+    if(typeof this.options.listeners[name] === 'function') this.options.listeners[name].apply(this, args)
+  }
 
   initButtons() {
 
     [...document.querySelectorAll(this.options.btnUpdate)].forEach((btn) => {
       btn.addEventListener("click", (e) => {
+
+        this.fireEvent('beforeUpdateClick', [e]);
+
         let tr = e.composedPath().find((el) => {
           return el.tagName.toUpperCase() === "TR";
         });
@@ -57,8 +70,8 @@ class HcodeGrid {
               if (input) input.value = data[name];
           }
         }
+        this.fireEvent('afterUpdateClick', [e]);
 
-        $("#modal-update").modal("show");
       });
     });
 
