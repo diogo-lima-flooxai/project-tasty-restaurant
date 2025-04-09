@@ -102,18 +102,16 @@ router.get("/emails", function (req, res, next) {
   });
 });
 
-router.delete('/emails/:id', function(req,res,next){
- 
-  emails.delete(req.params.id).then(results=>{
-
+router.delete("/emails/:id", function (req, res, next) {
+  emails
+    .delete(req.params.id)
+    .then((results) => {
       res.send(results);
-
-  }).catch(err=>{
-
+    })
+    .catch((err) => {
       res.send(err);
-  })
-
-})
+    });
+});
 
 router.get("/menus", function (req, res, next) {
   menus.getMenus().then((data) => {
@@ -149,22 +147,38 @@ router.delete("/menus/:id", function (req, res, next) {
 });
 
 router.get("/reservations", function (req, res, next) {
-  let start = (req.query.start) ? req.query.start : moment().subtract(1, "year").format('YYYY-MM-DD');
-  let end = (req.query.end) ? req.query.end : moment().format('YYYY-MM-DD');
+  let start = req.query.start
+    ? req.query.start
+    : moment().subtract(1, "year").format("YYYY-MM-DD");
+  let end = req.query.end ? req.query.end : moment().format("YYYY-MM-DD");
 
-      reservations.getReservations(req).then(pag=>{
-        res.render("admin/reservations",admin.getParams(req, {
-            date:{
-                start,
-                end
-            },
-            data: pag.data,
-            moment,
-            links: pag.links
-        }));
-
-    })
+  reservations.getReservations(req).then((pag) => {
+    res.render(
+      "admin/reservations",
+      admin.getParams(req, {
+        date: {
+          start,
+          end,
+        },
+        data: pag.data,
+        moment,
+        links: pag.links,
+      })
+    );
+  });
 });
+
+router.get("/reservations/chart", function (req, res, next) {
+  req.query.start = req.query.start
+    ? req.query.start
+    : moment().subtract(1, "year").format("YYYY-MM-DD");
+  req.query.end = req.query.end ? req.query.end : moment().format("YYYY-MM-DD");
+
+  reservations.chart(req).then((chartData) => {
+    res.send(chartData);
+  });
+});
+
 router.post("/reservations", function (req, res, next) {
   reservations
     .save(req.fields, req.files)
