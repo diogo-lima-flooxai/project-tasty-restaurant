@@ -40,7 +40,7 @@ class HcodeGrid {
       configs
     );
 
-    this.rows = [...document.querySelectorAll('table tbody tr')];
+    this.rows = [...document.querySelectorAll("table tbody tr")];
 
     this.initForms();
     this.initButtons();
@@ -48,27 +48,28 @@ class HcodeGrid {
   initForms() {
     this.formCreate = document.querySelector(this.options.formCreate);
 
-    this.formCreate
-      .save({
-        success:()=>{
+    if (this.formCreate) {
+      this.formCreate.save({
+        success: () => {
           this.fireEvent("afterFormCreate");
-        }, 
-        failure:()=>{
+        },
+        failure: () => {
           this.fireEvent("afterFormeCreateError");
-        }
-      })
+        },
+      });
+    }
 
     this.formUpdate = document.querySelector(this.options.formUpdate);
-
-    this.formUpdate
-      .save({
-        success:()=>{
+    if (this.formUpdate) {
+      this.formUpdate.save({
+        success: () => {
           this.fireEvent("afterFormUpdate");
         },
-      failure:()=>{
-        this.fireEvent("afterFormeUpdateError");
-      }
-    });
+        failure: () => {
+          this.fireEvent("afterFormUpdateError");
+        },
+      });
+    }
   }
 
   fireEvent(name, args) {
@@ -124,6 +125,5 @@ class HcodeGrid {
         });
       });
     });
-
   }
 }
